@@ -5,15 +5,25 @@
   
 
   
-  <title>qbkivlin&#39;s blog</title>
+  <title>chapter 2 the vec3 class | qbkivlin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="qbkivlin&#39;s blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="写在前面：19年的ggj要到了，来广州之前还信誓旦旦地说这次的ggj要用unreal！现在看来这个计划应该是要鸽了。可能会用回creator吧？可能当一个观众？God knows 正文《ray tracing in one weekend》的第二章，造了一个3D向量轮子：Vec3向量的作用，顾名思义就是表示方向的一个度量打个比方，我们面前有一个盒子，为了描述盒子的体积，需要几个数字?简单，三个数字">
+<meta name="keywords" content="ray tracing in one weekend">
+<meta property="og:type" content="article">
+<meta property="og:title" content="chapter 2 the vec3 class">
+<meta property="og:url" content="http://yoursite.com/2018/11/30/chapter-2-the-vec3-class/index.html">
 <meta property="og:site_name" content="qbkivlin&#39;s blog">
+<meta property="og:description" content="写在前面：19年的ggj要到了，来广州之前还信誓旦旦地说这次的ggj要用unreal！现在看来这个计划应该是要鸽了。可能会用回creator吧？可能当一个观众？God knows 正文《ray tracing in one weekend》的第二章，造了一个3D向量轮子：Vec3向量的作用，顾名思义就是表示方向的一个度量打个比方，我们面前有一个盒子，为了描述盒子的体积，需要几个数字?简单，三个数字">
 <meta property="og:locale" content="default">
+<meta property="og:image" content="http://yoursite.com/images/ray_tracing_in_one_weekend/chapter2_1.png">
+<meta property="og:image" content="http://yoursite.com/images/ray_tracing_in_one_weekend/chapter2_2.png">
+<meta property="og:image" content="http://yoursite.com/images/ray_tracing_in_one_weekend/chapter2_3.png">
+<meta property="og:image" content="http://yoursite.com/images/ray_tracing_in_one_weekend/chapter2_4.png">
+<meta property="og:updated_time" content="2018-11-30T05:24:17.567Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="qbkivlin&#39;s blog">
+<meta name="twitter:title" content="chapter 2 the vec3 class">
+<meta name="twitter:description" content="写在前面：19年的ggj要到了，来广州之前还信誓旦旦地说这次的ggj要用unreal！现在看来这个计划应该是要鸽了。可能会用回creator吧？可能当一个观众？God knows 正文《ray tracing in one weekend》的第二章，造了一个3D向量轮子：Vec3向量的作用，顾名思义就是表示方向的一个度量打个比方，我们面前有一个盒子，为了描述盒子的体积，需要几个数字?简单，三个数字">
+<meta name="twitter:image" content="http://yoursite.com/images/ray_tracing_in_one_weekend/chapter2_1.png">
   
     <link rel="alternate" href="/atom.xml" title="qbkivlin&#39;s blog" type="application/atom+xml">
   
@@ -64,9 +74,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-chapter-2-the-vec3-class" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-chapter-2-the-vec3-class" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/11/30/chapter-2-the-vec3-class/" class="article-date">
   <time datetime="2018-11-30T04:14:05.000Z" itemprop="datePublished">2018-11-30</time>
@@ -83,8 +91,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/30/chapter-2-the-vec3-class/">chapter 2 the vec3 class</a>
+    <h1 class="article-title" itemprop="name">
+      chapter 2 the vec3 class
     </h1>
   
 
@@ -109,64 +117,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-chapter-1-output-an-image" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/29/chapter-1-output-an-image/" class="article-date">
-  <time datetime="2018-11-29T13:33:36.000Z" itemprop="datePublished">2018-11-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ray-tracing/">ray tracing</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/29/chapter-1-output-an-image/">chapter 1 output an image</a>
-    </h1>
+    <a href="/2018/11/29/chapter-1-output-an-image/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">chapter 1 output an image</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>写在前面：</b><br>之前一直在想，是不是可以使用简单的方式作为切入点学习渲染？然而在寻找答案这条路上走了很多弯路：<br>考虑过Ogre，然而不喜欢那些接口。<br>考虑过U3D，然而只考虑了一瞬间哈哈。<br>考虑过UE4，但是面对可视化材质编辑器和纷繁复杂，一日一变的usf，又感觉无从下手<br>考虑过Creator3D，然而看了一眼论坛的公测日志，我又犹豫了<br>考虑过shader toy，使用pixel shader，直觉告诉我这不是我想要的<br>考虑过DX12，可是复杂的资源管理让我感到在戴着枷锁跳舞</p>
-<p>在这之前看了不少书：《全局光照技术》，《Game Engine Architecture 3th》，《Real Time Rendering 4th》，都是很棒的书，看得似懂非懂，看的过程中不乏有时激动得很想实践一番，奈何不知道从哪里开始。</p>
-<p>昨晚辗转反侧之后，突然想到之前@MiloYip在知乎的回答：<a href="https://www.cnblogs.com/miloyip/archive/2010/03/29/1698953.html" target="_blank" rel="noopener">用JavaScript玩转计算机图形学(一)光线追踪入门</a><br>今天来尝试了一番之后，我相信这就是我想要的。@MiloYip在更新了两章用js玩光追的内容就鸽了，可能是发现了更有挑战的领域了吧。但是对我来说，一切从简是一个很好的开始。</p>
-<p><b>正文</b><br>从这里开始，就是《ray tracing in one weekend》的冒险之旅了。<br>所有的内容，都将使用javascript实践。</p>
-<p>光线追踪，简单的理解，我们不断的去跟踪进入眼球的光线，查看每条光线的辐照度，辐照度可以RGBA表示，至于RGBA到一个能看到的画面的映射，我们暂时不去深究，让我们立足于RGBA这一边界。<br>抽象来看，每条进入眼球的光线，相当于都带了一个RGBA值，这些光线在进入眼球的过程中，会先打向一个方形的平面(并将光线的RGBA值打在交点上(叠加)，于是平面上那个点就有了颜色)，这个平面就是我们最终看到的画面。<br><img src="/images/ray_tracing_in_one_weekend/chapter1_1.png" alt=""></p>
-<p>好了，问题来了，最基础的，我们如何去显示一个画面？<br>最简单的方式，一个方形的画面，我们可以用数组来存储这些信息(RGBA值)。通过修改这个数组的信息，理论上我们就相当于在修改画面的表现了。<br>刚刚好，canvas就有这样的接口。</p>
-<p><b>获取像素数组</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> ctx = canvas.getContext(<span class="string">'2d'</span>)</span><br><span class="line"><span class="keyword">let</span> width = canvas.attributes.width.value</span><br><span class="line"><span class="keyword">let</span> height = canvas.attributes.height.value</span><br><span class="line"><span class="keyword">let</span> imgdata = ctx.getImageData(<span class="number">0</span>,<span class="number">0</span>,width,height)</span><br><span class="line"><span class="keyword">let</span> pixels = imgdata.data <span class="comment">// 像素数组(一维)</span></span><br></pre></td></tr></table></figure></p>
-<p><b>使用像素数组绘制画面</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.putImageData(imgdata, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这是一个很好的开始，剩下的就只要从<code>pixels</code>里面做文章了。</p>
-<p>回到标题，让我们<b>输出一个画面,将数组坐标绘制成颜色！</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;canvas width=<span class="string">"256"</span> height=<span class="string">"256"</span> id=<span class="string">"screen"</span>&gt;&lt;/canvas&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params">canvas</span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="comment">// 获取像素数组</span></span><br><span class="line">            <span class="keyword">let</span> ctx = canvas.getContext(<span class="string">"2d"</span>)</span><br><span class="line">            <span class="keyword">let</span> w = canvas.attributes.width.value</span><br><span class="line">            <span class="keyword">let</span> h = canvas.attributes.height.value</span><br><span class="line">            ctx.fillStyle = <span class="string">"rgb(0,0,0)"</span></span><br><span class="line">            ctx.fillRect(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> imgdata = ctx.getImageData(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> pixels = imgdata.data</span><br><span class="line"></span><br><span class="line">            <span class="comment">//将数组坐标(通过除以数组长度映射到[0,1])当作颜色绘制</span></span><br><span class="line">            <span class="keyword">let</span> i = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> y = <span class="number">0</span>; y &lt; h; y++) &#123;</span><br><span class="line">                <span class="keyword">let</span> sy = <span class="number">1</span> - y / h</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">let</span> x = <span class="number">0</span>; x &lt; w; x++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">let</span> sx = x / w</span><br><span class="line">                    pixels[i    ] = sx * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">1</span>] = sy * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">2</span>] = <span class="number">0.2</span> * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">3</span>] = <span class="number">1</span> * <span class="number">255</span></span><br><span class="line">                    i+=<span class="number">4</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 使用像素数组绘制画面</span></span><br><span class="line">            ctx.putImageData(imgdata, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> canvas = <span class="built_in">document</span>.getElementById(<span class="string">'screen'</span>)</span><br><span class="line">        render(canvas)</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>最终画面如下：<br><img src="/images/ray_tracing_in_one_weekend/chapter1_2.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="http://yoursite.com/2018/11/29/chapter-1-output-an-image/" data-id="cjp3l3eyw0000msuuwb05g82w" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-
 
 </section>
         
