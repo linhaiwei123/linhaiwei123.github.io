@@ -66,6 +66,56 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-physical-base-rendering-3th-1-introduction" class="article article-type-post" itemscope="" itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2018/12/01/physical-base-rendering-3th-1-introduction/" class="article-date">
+  <time datetime="2018-12-01T06:08:23.000Z" itemprop="datePublished">2018-12-01</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/physical-base-rendering/">physical base rendering</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/12/01/physical-base-rendering-3th-1-introduction/">physical base rendering 3th 1 introduction</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p><b>正文</b></p>
+<h3 id="01-介绍"><a href="#01-介绍" class="headerlink" title="01 介绍"></a>01 介绍</h3><p>渲染是这样的一个过程：它将一个3D场景描述成一张图片。显然，这像是在泛泛而谈，因为我们有很多种方式来实现渲染过程，并且每种方式的侧重点都不同。对于<b>基于物理</b>的方式，我们力求去表达场景的真实性——利用物理学中光学的知识。听起来使用基于物理的方式来渲染是一个直观的方式，但是这种渲染方式也仅在近10年才被广泛使用。在本章节最后的1.7小节，我们将简明地聊一下基于物理渲染的历史，以及近年来离线渲染在电影，游戏行业的发展。</p>
+<p>这本书的书名叫 pbrt——基于物理的渲染系统(physical based rendering system),而这个系统背后的渲染算法是一个名为<b>光线追踪</b>的算法。让我们纵观一下其他讲述计算机图形学的书籍，它们大多数在行文时更侧重于算法思想和图形学理论，有时在关键的地方加入一小段代码辅助理解。读者在面对这些书学习时，通常会感到不踏实，无从下手。为了打破这种现状，我们这本书除了涵盖理论层面的讲解，还随书附带了一个功能完整的渲染系统实现！这个系统的源码(以及范例场景，材质等)，都可以在官方网站 pbrt.org 上找到。</p>
+<h4 id="1-1-面向思路的编程"><a href="#1-1-面向思路的编程" class="headerlink" title="1.1 面向思路的编程"></a>1.1 面向思路的编程</h4><p>当 Donald Knuth 在开发TEX 排版系统时，发明了一种新的编程方法论，这种方法论极其简单而具有革命性——它认为程序的表达应该更遵照人类阅读的思路去表达，而不仅仅遵照计算机所理解的方式。Donald Knuth 称这种方法论为<b>面向思路的编程(literate programming)</b>。其实这本书(包括读者正在阅读的当前章节)涵盖了一个冗长的面向思路的程序(literate program)。这意味着，读者在阅读这本书的过程中，实际上可以阅读到pbrt渲染系统的完整实现，而不仅仅是抽象的描述。</p>
+<p>面向思路的编程同时使用了<b>文本格式的语言</b>(比方说 TEX 或者 HTML) 以及<b>高级编程语言</b>(比方说 C++)。<b>而且这两种语言可以互相转换</b>，当我们需要理解这段代码发生了什么时，可以将高级编程语言转成文本格式来方便理解(思路上的理解)，而当我们需要执行这段代码看效果时，也能无缝地将文本语言转换为高级编程语言让计算机执行(代码实现上的理解)。</p>
+<p>举个简单的例子，考虑这样的一个函数 InitGlobals() 它用来初始化全局变量</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitGlobals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    nMarbles = <span class="number">25.7</span>;</span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>&lt;未完待续&gt;</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-1-introduction/" data-id="cjp56j40100019cuup2qw57xa" class="article-share-link">Share</a>
+      
+      
+  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+  
     <article id="post-physical-base-rendering-3th-0-setup" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/12/01/physical-base-rendering-3th-0-setup/" class="article-date">
@@ -99,7 +149,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-0-setup/" data-id="cjp506xme000130uu8tropm6g" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-0-setup/" data-id="cjp56j3zx00009cuuaf3wfgl8" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
@@ -146,7 +196,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/30/ray-tracing-in-one-week-2-the-vec3-class/" data-id="cjp506xmi000430uulfvtkamp" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/11/30/ray-tracing-in-one-week-2-the-vec3-class/" data-id="cjp56j40400049cuucyikjmi2" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
@@ -199,7 +249,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/29/ray-tracing-in-one-week-1-output-an-image/" data-id="cjp506xmb000030uuwci7vchr" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/11/29/ray-tracing-in-one-week-1-output-an-image/" data-id="cjp56j40500059cuu8aga5wxd" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
@@ -241,7 +291,7 @@
   <div class="widget-wrap">
     <h3 class="widget-title">Tag Cloud</h3>
     <div class="widget tagcloud">
-      <a href="/tags/physical-base-rendering-3th/" style="font-size: 10px;">physical base rendering 3th</a> <a href="/tags/ray-tracing-in-one-weekend/" style="font-size: 20px;">ray tracing in one weekend</a>
+      <a href="/tags/physical-base-rendering-3th/" style="font-size: 10px;">physical base rendering 3th</a> <a href="/tags/ray-tracing-in-one-weekend/" style="font-size: 10px;">ray tracing in one weekend</a>
     </div>
   </div>
 
@@ -261,6 +311,10 @@
     <h3 class="widget-title">Recent Posts</h3>
     <div class="widget">
       <ul>
+        
+          <li>
+            <a href="/2018/12/01/physical-base-rendering-3th-1-introduction/">physical base rendering 3th 1 introduction</a>
+          </li>
         
           <li>
             <a href="/2018/12/01/physical-base-rendering-3th-0-setup/">physical base rendering 3th 0 setup</a>
