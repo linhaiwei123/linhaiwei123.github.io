@@ -99,12 +99,20 @@
 <p>面向思路的编程同时使用了<b>文本格式的语言</b>(比方说 TEX 或者 HTML) 以及<b>高级编程语言</b>(比方说 C++)。<b>而且这两种语言可以互相转换</b>，当我们需要理解这段代码发生了什么时，可以将高级编程语言转成文本格式来方便理解(思路上的理解)，而当我们需要执行这段代码看效果时，也能无缝地将文本语言转换为高级编程语言让计算机执行(代码实现上的理解)。</p>
 <p>举个简单的例子，考虑这样的一个函数 InitGlobals() 它用来初始化全局变量</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitGlobals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    nMarbles = <span class="number">25.7</span>;</span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>&lt;未完待续&gt;</p>
+<p>尽管看起来很整洁，但是在缺乏上下文的情况下，我们很难理解这段代码的含义。比方说，为什么变量 nMarbles(弹珠的数目)的值是一个浮点数?为了理解这个变量的含义，我们可能要去找遍整个程序出现这个变量的地方，进一步猜测它的作用。尽管这种表达方式对编译器来说是友好的，但是它却不利于阅读。<br>对于面向思路的编程，我们可以这么表达 InitGlobals():<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Function Definitions&gt; = </span><br><span class="line">    <span class="keyword">void</span> InitGlobals() &#123;</span><br><span class="line">        &lt;Initialize Global Variables <span class="number">2</span>&gt;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>我们定义了一个文本段，称为<funcgion definitions="">,它包含了一个函数 InitGlobals()。而在 InitGlobals 的函数体内，定义了另外一个文本段 <initialize global="" variables="">。由于函数体内的文本段还未定义，所以我们还无法完全理解整段代码的含义。<br>但，这是介于文本语言和编程语言之间一个恰当的抽象。当我们需要定义shoeSize时，可以这么写<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Initialize Global Variables&gt; = </span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br></pre></td></tr></table></figure></initialize></funcgion></p>
+<p>在实际编译代码的时候，我们只要将文本段一一替换成代码即可(类似于C++宏)。当我们需要定义dielectric时，我们可以将文本段拼接在一起:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Initialize Global Variables&gt; += </span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure></p>
+<p>我们使用 += 符号来表达文本段的拼接。当我们编译的时候，这三个文本段会合成这个样子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitGlobals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>使用文本段，我们就可以将复杂的函数按思路拆解成文本段，比方说，一个复杂的函数可以这么写：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;Function Definitions&gt; +=</span><br><span class="line">    <span class="keyword">void</span> complexFunc(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">double</span> *values) &#123;</span><br><span class="line">        &lt;Check validity of arguments&gt;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; y) &#123;</span><br><span class="line">            &lt;Swap parameter values&gt;</span><br><span class="line">        &#125;</span><br><span class="line">        &lt;Do precomputation before loop&gt; </span><br><span class="line">        &lt;Loop through <span class="keyword">and</span> update values <span class="built_in">array</span>&gt;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>同样的，在编译的时候，这些文本段都会被宏展开。在表述思路的时候，我们可以按思路依次去表达每个文本段的含义以及代码。这种拆分方式可以让读者一眼看出代码的思路，不至于陷入细节。通常一个文本段不会超过10行。</p>
+<h5 id="1-1-1-索引和交叉引用"><a href="#1-1-1-索引和交叉引用" class="headerlink" title="1.1.1 索引和交叉引用"></a>1.1.1 索引和交叉引用</h5><p>下面我们将介绍一个特性，让我们更方便地找到需要的文本段：在定义文本段时，我们在边缘写下了页码，表示在这些页数引用了当前文本段，在附录C，我们收集了所有文本段的定义所在的页码。让我们看个定义文本段例子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;A fascinating fragment&gt; = <span class="number">184</span>,<span class="number">690</span></span><br><span class="line">    mMarbles += <span class="number">.001</span>;</span><br></pre></td></tr></table></figure></p>
+<p>这意味着在184页和690页使用了这个文本段。有一部分文本段已经在之前的页码出现过，或者过于重复，我们就没有把页码列出。让我们看一个引用文本段的例子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Do something interesting&gt; += <span class="number">500</span></span><br><span class="line">    InitializeSomethingInteresting();</span><br><span class="line">    &lt;Do something <span class="keyword">else</span> Interesting <span class="number">486</span>&gt;</span><br><span class="line">    CleanUp();</span><br></pre></td></tr></table></figure></p>
+<p>这表明我们引用的文本段在486页定义。</p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-1-introduction/" data-id="cjp56j40100019cuup2qw57xa" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-1-introduction/" data-id="cjp5ih0rb0000vsuumwh7sy61" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
@@ -149,7 +157,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-0-setup/" data-id="cjp56j3zx00009cuuaf3wfgl8" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-0-setup/" data-id="cjp5ih0re0001vsuu07u4ekdf" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
@@ -196,7 +204,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/30/ray-tracing-in-one-week-2-the-vec3-class/" data-id="cjp56j40400049cuucyikjmi2" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/11/30/ray-tracing-in-one-week-2-the-vec3-class/" data-id="cjp5ih0rs000fvsuukrncw3ts" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
@@ -249,7 +257,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/29/ray-tracing-in-one-week-1-output-an-image/" data-id="cjp56j40500059cuu8aga5wxd" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/11/29/ray-tracing-in-one-week-1-output-an-image/" data-id="cjp5ih0rh0004vsuu4hm4fl6q" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
