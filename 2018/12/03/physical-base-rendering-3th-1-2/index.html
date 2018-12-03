@@ -15,10 +15,13 @@
 <meta property="og:site_name" content="qbkivlin&#39;s blog">
 <meta property="og:description" content="写在前面我一直在为gpu gem系列的书找一个学习渲染的平台，据说今天是creator 3d 2.10 正式版发布的日子，等发布了可以试一下。 正文 1.2 照片级渲染以及光线追踪算法照片级渲染的目标就是：渲染一张让人无法区分真假的图片。在我们介绍渲染的过程之前，我们要明白，对于现实世界的观察是因人而异的，对于真实的感受也同样因人而异。所以尽管这本书试图去涵盖一部分人类感官上的内容。但是给予人们精">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-12-03T01:43:28.299Z">
+<meta property="og:image" content="https://linhaiwei123.github.io/images/physical_base_rendering_3th/Figure_1_1.png">
+<meta property="og:image" content="https://linhaiwei123.github.io/images/physical_base_rendering_3th/Figure_1_2.png">
+<meta property="og:updated_time" content="2018-12-03T04:55:57.534Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="photorealistic rendering and the ray-tracing algorithm">
 <meta name="twitter:description" content="写在前面我一直在为gpu gem系列的书找一个学习渲染的平台，据说今天是creator 3d 2.10 正式版发布的日子，等发布了可以试一下。 正文 1.2 照片级渲染以及光线追踪算法照片级渲染的目标就是：渲染一张让人无法区分真假的图片。在我们介绍渲染的过程之前，我们要明白，对于现实世界的观察是因人而异的，对于真实的感受也同样因人而异。所以尽管这本书试图去涵盖一部分人类感官上的内容。但是给予人们精">
+<meta name="twitter:image" content="https://linhaiwei123.github.io/images/physical_base_rendering_3th/Figure_1_1.png">
   
     <link rel="alternate" href="/atom.xml" title="qbkivlin&#39;s blog" type="application/atom+xml">
   
@@ -97,12 +100,22 @@
       
         <p><b>写在前面</b><br>我一直在为gpu gem系列的书找一个学习渲染的平台，据说今天是creator 3d 2.10 正式版发布的日子，等发布了可以试一下。</p>
 <p><b>正文</b></p>
-<h4 id="1-2-照片级渲染以及光线追踪算法"><a href="#1-2-照片级渲染以及光线追踪算法" class="headerlink" title="1.2 照片级渲染以及光线追踪算法"></a>1.2 照片级渲染以及光线追踪算法</h4><p>照片级渲染的目标就是：渲染一张让人无法区分真假的图片。在我们介绍渲染的过程之前，我们要明白，对于现实世界的观察是因人而异的，对于真实的感受也同样因人而异。所以尽管这本书试图去涵盖一部分人类感官上的内容。但是给予人们精确的真实感渲染仍旧存在大量科学问题亟待解决。只能说，我们尽力而为。</p>
+<h4 id="1-2-照片级渲染以及光线追踪算法"><a href="#1-2-照片级渲染以及光线追踪算法" class="headerlink" title="1.2 照片级渲染以及光线追踪算法"></a>1.2 照片级渲染以及光线追踪算法</h4><p>照片级渲染的目标就是：渲染一张让人无法区分真假的图片。在我们介绍渲染的过程之前，我们要明白，对于现实世界的观察是因人而异的，对于真实的感受也同样因人而异。所以尽管这本书试图去涵盖一部分人类感官上的内容。但是给予人们精确的真实感渲染仍旧存在大量科学问题亟待解决。只能说，我们尽力而为。<br>几乎所有的照片级渲染系统背后的算法都是光线追踪，光线追踪的思路很简单：就是跟踪进入相机(眼球)的光线，观察光线在场景中反弹的过程中，光自身属性上的变化。尽管有多种不同方式来实现光线追踪器，它们还是具备一些共通的点：</p>
+<ul>
+<li>相机：相机决定了场景如何被观察以及从哪里被观察。许多渲染系统从相机开始生成追踪光线，射向场景。</li>
+<li>光线与场景求交点：我们需要知道发射的光线打在场景中哪个物体身上了。然后获取这个交点一些基本信息，比如表面的法线或材质。当我们求交的时候，发现光线穿过了多个物体时，通常我们取最近的交点。</li>
+<li>光源： 没有光源我们就啥都看不到了，一个光线追踪器肯定要知道光能在场景中的分布,那首先我们需要知道光源的位置，以及光源表面光能的分布。</li>
+<li>可见性： 我们需要知道场景中某个点，是否被光源照射到了，很简单，看一下这个点和光源的连线之间有没遮挡物就好了。</li>
+<li>表面散射： 场景中的物体需要告诉光线，当光线打到自己身上时，光线会发生什么变化：光线可能会发生方向的变化(反射，折射，弹向多个方向),还可能发生能量的变化(变暗淡,变色,弹向不同方向的能量变化不一)</li>
+<li>间接光照： 光线打到场景的物体上会发生反弹，反弹的光线可以继续打向场景中其他物体，这时我们需要进一步跟踪，来获取更详细的光信息。</li>
+<li>光线传播： 光在真空中传播时保持能量守恒，但是讲道理地球上真空环境是不常见的，我们还需要模拟光线通过烟，雾，地球大气等的表现。</li>
+</ul>
+<h5 id="1-2-1-相机"><a href="#1-2-1-相机" class="headerlink" title="1.2.1 相机"></a>1.2.1 相机</h5><p>相机对我们来说，不陌生：我们按下快门，然后图像就被记录到胶卷或者SD卡中了。让我们从一个简单的相机说起：针孔摄像机。针孔摄像机由一个开了小孔的小盒子组成(图 1.1)。<br>光线通过小孔，然后打到针孔摄像机内部的胶卷上，尽管针孔摄像机很简陋，但还是有人在使用它，用于拍摄具有艺术观赏性的照片吧。当然，以这种方式拍照，需要让相机放置足够长的时间，让光线进入小孔，以让足够多的光能驻留在胶卷上(曝光?)。<br>尽管现代的相机要比针孔摄像机复杂的多了，但对我们来说，一切从简是一个很好的开始。<br>对于相机来说，很重要的一个点是，我们要决定拍下场景中的哪一部分。在图1.1中，我们看到，连接了胶卷和针孔的连线，形成了两个金字塔形状，外侧的金字塔不断延申向场景中。<br>场景中的物体，不在外侧的金字塔内的，自然就不会被拍进胶卷内了。现代的相机可以拍摄到的角度肯定比金字塔形状要复杂的多了，所以我们换个名词，我们把相机看到的角度范围称为<b>视野(viewing volume)</b><br><img src="/images/physical_base_rendering_3th/Figure_1_1.png" alt=""><br><img src="/images/physical_base_rendering_3th/Figure_1_2.png" alt=""></p>
 
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/03/physical-base-rendering-3th-1-2/" data-id="cjp7mpsol0006ywuu6xlhwx34" class="article-share-link">Share</a>
+      <a data-url="https://linhaiwei123.github.io/2018/12/03/physical-base-rendering-3th-1-2/" data-id="cjp7udkk40004fkuuh01jirua" class="article-share-link">Share</a>
       
       
   <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
