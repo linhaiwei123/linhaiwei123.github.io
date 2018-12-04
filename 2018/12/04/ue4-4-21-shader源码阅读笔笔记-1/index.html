@@ -5,15 +5,20 @@
   
 
   
-  <title>qbkivlin&#39;s blog</title>
+  <title>ue4 4.21 shader notes(1) | qbkivlin&#39;s blog</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="qbkivlin&#39;s blog">
-<meta property="og:url" content="https://linhaiwei123.github.io/index.html">
+  <meta name="description" content="写在前面经过大概三天的折磨，我希望从一个简单地切入点学习渲染的想法泡汤了。没有银弹，还是老老实实看ue4源码好了。 正文4.21/Engine/Shaders/Public/FP16Math.ush123456789101112131415161718192021222324252627282930313233343536373839404142/** 定义使用16位浮点half，32位浮点flo">
+<meta name="keywords" content="ue4 shader">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ue4 4.21 shader notes(1)">
+<meta property="og:url" content="https://linhaiwei123.github.io/2018/12/04/ue4-4-21-shader源码阅读笔笔记-1/index.html">
 <meta property="og:site_name" content="qbkivlin&#39;s blog">
+<meta property="og:description" content="写在前面经过大概三天的折磨，我希望从一个简单地切入点学习渲染的想法泡汤了。没有银弹，还是老老实实看ue4源码好了。 正文4.21/Engine/Shaders/Public/FP16Math.ush123456789101112131415161718192021222324252627282930313233343536373839404142/** 定义使用16位浮点half，32位浮点flo">
 <meta property="og:locale" content="default">
+<meta property="og:updated_time" content="2018-12-04T02:24:00.527Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="qbkivlin&#39;s blog">
+<meta name="twitter:title" content="ue4 4.21 shader notes(1)">
+<meta name="twitter:description" content="写在前面经过大概三天的折磨，我希望从一个简单地切入点学习渲染的想法泡汤了。没有银弹，还是老老实实看ue4源码好了。 正文4.21/Engine/Shaders/Public/FP16Math.ush123456789101112131415161718192021222324252627282930313233343536373839404142/** 定义使用16位浮点half，32位浮点flo">
   
     <link rel="alternate" href="/atom.xml" title="qbkivlin&#39;s blog" type="application/atom+xml">
   
@@ -64,9 +69,7 @@
   </div>
 </header>
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-ue4-4-21-shader源码阅读笔笔记-1" class="article article-type-post" itemscope="" itemprop="blogPost">
+        <section id="main"><article id="post-ue4-4-21-shader源码阅读笔笔记-1" class="article article-type-post" itemscope="" itemprop="blogPost">
   <div class="article-meta">
     <a href="/2018/12/04/ue4-4-21-shader源码阅读笔笔记-1/" class="article-date">
   <time datetime="2018-12-04T01:32:36.000Z" itemprop="datePublished">2018-12-04</time>
@@ -83,8 +86,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/04/ue4-4-21-shader源码阅读笔笔记-1/">ue4 4.21 shader notes(1)</a>
+    <h1 class="article-title" itemprop="name">
+      ue4 4.21 shader notes(1)
     </h1>
   
 
@@ -109,269 +112,19 @@
     </footer>
   </div>
   
-</article>
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-physical-base-rendering-3th-1-2" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/03/physical-base-rendering-3th-1-2/" class="article-date">
-  <time datetime="2018-12-03T01:16:41.000Z" itemprop="datePublished">2018-12-03</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/physical-base-rendering/">physical base rendering</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/03/physical-base-rendering-3th-1-2/">1.2 photorealistic rendering and the ray-tracing algorithm</a>
-    </h1>
+    <a href="/2018/12/03/physical-base-rendering-3th-1-2/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">1.2 photorealistic rendering and the ray-tracing algorithm</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>写在前面</b><br>我一直在为gpu gem系列的书找一个学习渲染的平台，据说今天是creator 3d 2.10 正式版发布的日子，等发布了可以试一下。</p>
-<p><b>正文</b></p>
-<h4 id="1-2-照片级渲染以及光线追踪算法"><a href="#1-2-照片级渲染以及光线追踪算法" class="headerlink" title="1.2 照片级渲染以及光线追踪算法"></a>1.2 照片级渲染以及光线追踪算法</h4><p>照片级渲染的目标就是：渲染一张让人无法区分真假的图片。在我们介绍渲染的过程之前，我们要明白，对于现实世界的观察是因人而异的，对于真实的感受也同样因人而异。所以尽管这本书试图去涵盖一部分人类感官上的内容。但是给予人们精确的真实感渲染仍旧存在大量科学问题亟待解决。只能说，我们尽力而为。<br>几乎所有的照片级渲染系统背后的算法都是光线追踪，光线追踪的思路很简单：就是跟踪进入相机(眼球)的光线，观察光线在场景中反弹的过程中，光自身属性上的变化。尽管有多种不同方式来实现光线追踪器，它们还是具备一些共通的点：</p>
-<ul>
-<li>相机：相机决定了场景如何被观察以及从哪里被观察。许多渲染系统从相机开始生成追踪光线，射向场景。</li>
-<li>光线与场景求交点：我们需要知道发射的光线打在场景中哪个物体身上了。然后获取这个交点一些基本信息，比如表面的法线或材质。当我们求交的时候，发现光线穿过了多个物体时，通常我们取最近的交点。</li>
-<li>光源： 没有光源我们就啥都看不到了，一个光线追踪器肯定要知道光能在场景中的分布,那首先我们需要知道光源的位置，以及光源表面光能的分布。</li>
-<li>可见性： 我们需要知道场景中某个点，是否被光源照射到了，很简单，看一下这个点和光源的连线之间有没遮挡物就好了。</li>
-<li>表面散射： 场景中的物体需要告诉光线，当光线打到自己身上时，光线会发生什么变化：光线可能会发生方向的变化(反射，折射，弹向多个方向),还可能发生能量的变化(变暗淡,变色,弹向不同方向的能量变化不一)</li>
-<li>间接光照： 光线打到场景的物体上会发生反弹，反弹的光线可以继续打向场景中其他物体，这时我们需要进一步跟踪，来获取更详细的光信息。</li>
-<li>光线传播： 光在真空中传播时保持能量守恒，但是讲道理地球上真空环境是不常见的，我们还需要模拟光线通过烟，雾，地球大气等的表现。</li>
-</ul>
-<h5 id="1-2-1-相机"><a href="#1-2-1-相机" class="headerlink" title="1.2.1 相机"></a>1.2.1 相机</h5><p>相机对我们来说，不陌生：我们按下快门，然后图像就被记录到胶卷或者SD卡中了。让我们从一个简单的相机说起：针孔摄像机。针孔摄像机由一个开了小孔的小盒子组成(图 1.1)。<br>光线通过小孔，然后打到针孔摄像机内部的胶卷上，尽管针孔摄像机很简陋，但还是有人在使用它，用于拍摄具有艺术观赏性的照片吧。当然，以这种方式拍照，需要让相机放置足够长的时间，让光线进入小孔，以让足够多的光能驻留在胶卷上(曝光?)。<br>尽管现代的相机要比针孔摄像机复杂的多了，但对我们来说，一切从简是一个很好的开始。<br>对于相机来说，很重要的一个点是，我们要决定拍下场景中的哪一部分。在图1.1中，我们看到，连接了胶卷和针孔的连线，形成了两个金字塔形状，外侧的金字塔不断延申向场景中。<br>场景中的物体，不在外侧的金字塔内的，自然就不会被拍进胶卷内了。现代的相机可以拍摄到的角度肯定比金字塔形状要复杂的多了，所以我们换个名词，我们把相机看到的角度范围称为<b>视野(viewing volume)</b><br><img src="/images/physical_base_rendering_3th/Figure_1_1.png" alt=""><br><img src="/images/physical_base_rendering_3th/Figure_1_2.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/03/physical-base-rendering-3th-1-2/" data-id="cjp94b7du0005gcuushudjwcw" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-  
-    <article id="post-physical-base-rendering-3th-1" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/01/physical-base-rendering-3th-1/" class="article-date">
-  <time datetime="2018-12-01T06:08:23.000Z" itemprop="datePublished">2018-12-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/physical-base-rendering/">physical base rendering</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/01/physical-base-rendering-3th-1/">1.0 introduction</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>正文</b></p>
-<h3 id="01-介绍"><a href="#01-介绍" class="headerlink" title="01 介绍"></a>01 介绍</h3><p>渲染是这样的一个过程：它将一个3D场景描述成一张图片。显然，这像是在泛泛而谈，因为我们有很多种方式来实现渲染过程，并且每种方式的侧重点都不同。对于<b>基于物理</b>的方式，我们力求去表达场景的真实性——利用物理学中光学的知识。听起来使用基于物理的方式来渲染是一个直观的方式，但是这种渲染方式也仅在近10年才被广泛使用。在本章节最后的1.7小节，我们将简明地聊一下基于物理渲染的历史，以及近年来离线渲染在电影，游戏行业的发展。</p>
-<p>这本书的书名叫 pbrt——基于物理的渲染系统(physical based rendering system),而这个系统背后的渲染算法是一个名为<b>光线追踪</b>的算法。让我们纵观一下其他讲述计算机图形学的书籍，它们大多数在行文时更侧重于算法思想和图形学理论，有时在关键的地方加入一小段代码辅助理解。读者在面对这些书学习时，通常会感到不踏实，无从下手。为了打破这种现状，我们这本书除了涵盖理论层面的讲解，还随书附带了一个功能完整的渲染系统实现！这个系统的源码(以及范例场景，材质等)，都可以在官方网站 pbrt.org 上找到。</p>
-<h4 id="1-1-面向思路的编程"><a href="#1-1-面向思路的编程" class="headerlink" title="1.1 面向思路的编程"></a>1.1 面向思路的编程</h4><p>当 Donald Knuth 在开发TEX 排版系统时，发明了一种新的编程方法论，这种方法论极其简单而具有革命性——它认为程序的表达应该更遵照人类阅读的思路去表达，而不仅仅遵照计算机所理解的方式。Donald Knuth 称这种方法论为<b>面向思路的编程(literate programming)</b>。其实这本书(包括读者正在阅读的当前章节)涵盖了一个冗长的面向思路的程序(literate program)。这意味着，读者在阅读这本书的过程中，实际上可以阅读到pbrt渲染系统的完整实现，而不仅仅是抽象的描述。</p>
-<p>面向思路的编程同时使用了<b>文本格式的语言</b>(比方说 TEX 或者 HTML) 以及<b>高级编程语言</b>(比方说 C++)。<b>而且这两种语言可以互相转换</b>，当我们需要理解这段代码发生了什么时，可以将高级编程语言转成文本格式来方便理解(思路上的理解)，而当我们需要执行这段代码看效果时，也能无缝地将文本语言转换为高级编程语言让计算机执行(代码实现上的理解)。</p>
-<p>举个简单的例子，考虑这样的一个函数 InitGlobals() 它用来初始化全局变量</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitGlobals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    nMarbles = <span class="number">25.7</span>;</span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>尽管看起来很整洁，但是在缺乏上下文的情况下，我们很难理解这段代码的含义。比方说，为什么变量 nMarbles(弹珠的数目)的值是一个浮点数?为了理解这个变量的含义，我们可能要去找遍整个程序出现这个变量的地方，进一步猜测它的作用。尽管这种表达方式对编译器来说是友好的，但是它却不利于阅读。<br>对于面向思路的编程，我们可以这么表达 InitGlobals():<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Function Definitions&gt; = </span><br><span class="line">    <span class="keyword">void</span> InitGlobals() &#123;</span><br><span class="line">        &lt;Initialize Global Variables <span class="number">2</span>&gt;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>我们定义了一个文本段，称为 &lt;Funcgion Definitions&gt;,它包含了一个函数 InitGlobals()。而在 InitGlobals 的函数体内，定义了另外一个文本段 &lt;Initialize Global Variables&gt;。由于函数体内的文本段还未定义，所以我们还无法完全理解整段代码的含义。<br>但，这是介于文本语言和编程语言之间一个恰当的抽象。当我们需要定义shoeSize时，可以这么写<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Initialize Global Variables&gt; = </span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br></pre></td></tr></table></figure></p>
-<p>在实际编译代码的时候，我们只要将文本段一一替换成代码即可(类似于C++宏)。当我们需要定义dielectric时，我们可以将文本段拼接在一起:<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;Initialize Global Variables&gt; += </span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br></pre></td></tr></table></figure></p>
-<p>我们使用 += 符号来表达文本段的拼接。当我们编译的时候，这三个文本段会合成这个样子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">InitGlobals</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    shoeSize = <span class="number">13</span>;</span><br><span class="line">    dielectric = <span class="literal">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>使用文本段，我们就可以将复杂的函数按思路拆解成文本段，比方说，一个复杂的函数可以这么写：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&lt;Function Definitions&gt; +=</span><br><span class="line">    <span class="keyword">void</span> complexFunc(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">double</span> *values) &#123;</span><br><span class="line">        &lt;Check validity of arguments&gt;</span><br><span class="line">        <span class="keyword">if</span> (x &lt; y) &#123;</span><br><span class="line">            &lt;Swap parameter values&gt;</span><br><span class="line">        &#125;</span><br><span class="line">        &lt;Do precomputation before loop&gt; </span><br><span class="line">        &lt;Loop through <span class="keyword">and</span> update values <span class="built_in">array</span>&gt;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
-<p>同样的，在编译的时候，这些文本段都会被宏展开。在表述思路的时候，我们可以按思路依次去表达每个文本段的含义以及代码。这种拆分方式可以让读者一眼看出代码的思路，不至于陷入细节。通常一个文本段不会超过10行。</p>
-<h5 id="1-1-1-索引和交叉引用"><a href="#1-1-1-索引和交叉引用" class="headerlink" title="1.1.1 索引和交叉引用"></a>1.1.1 索引和交叉引用</h5><p>下面我们将介绍一个特性，让我们更方便地找到需要的文本段：在定义文本段时，我们在边缘写下了页码，表示在这些页数引用了当前文本段，在附录C，我们收集了所有文本段的定义所在的页码。让我们看个定义文本段例子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&lt;A fascinating fragment&gt; = <span class="number">184</span>,<span class="number">690</span></span><br><span class="line">    mMarbles += <span class="number">.001</span>;</span><br></pre></td></tr></table></figure></p>
-<p>这意味着在184页和690页使用了这个文本段。有一部分文本段已经在之前的页码出现过，或者过于重复，我们就没有把页码列出。让我们看一个引用文本段的例子：<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;Do something interesting&gt; += <span class="number">500</span></span><br><span class="line">    InitializeSomethingInteresting();</span><br><span class="line">    &lt;Do something <span class="keyword">else</span> Interesting <span class="number">486</span>&gt;</span><br><span class="line">    CleanUp();</span><br></pre></td></tr></table></figure></p>
-<p>这表明我们引用的文本段在486页定义。</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-1/" data-id="cjp94b7dm0000gcuuylz4zlrc" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-physical-base-rendering-3th-0" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/12/01/physical-base-rendering-3th-0/" class="article-date">
-  <time datetime="2018-12-01T04:41:34.000Z" itemprop="datePublished">2018-12-01</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/physical-base-rendering/">physical base rendering</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/12/01/physical-base-rendering-3th-0/">0.0 setup</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>写在前面</b><br>昨天简要的浏览了下《ray tracing in one week》 以及之后的 《ray tracing in next week》和 《ray tracing the rest of your life》的基本内容，我感觉后面的代码开始出现紊乱，不利于学习，需要先暂停梳理一下结构。<br>在纠结中，打算直接开启pbr的学习，那就不得不从备受推崇的《physical base rendering》开始学习了，全书1000+页。<br>要看完整本书并且实现自己的离线渲染器，我发现不做笔记，不写心得，应该是决然写不成的了。<br>我选择了一个偷懒的方式，打算以翻译作为切入点。</p>
-<p><b>正文</b><br>关于搭建pbr配套的源码环境pbrt-v3，已经有@miccall详尽的介绍：<a href="https://zhuanlan.zhihu.com/p/36205344" target="_blank" rel="noopener">PBRT-v3 在windows下的编译和使用</a><br>昨天我也参考了这篇文章做了win64环境下的搭建，在这里补充一些信息：<br>1.doxygen并非必要安装项，我发现这是一个自动生成文档的工具，理论上不应该影响编译，事实上也如此<br>2.当我试图运行 “pbrt F:\PBRT\pbrt-v3\scenes\killeroo-simple.pbrt”时，发现弹出abort()错误，后发现这个报错在git bash下会出现，当我换成power shell重新运行时，这个问题便迎刃而解。<br>3.我使用了mrViewer浏览最后生成的exr格式的图片</p>
-<p>最后实例场景的渲染图如下：<br><img src="/images/physical_base_rendering_3th/chapter_0_1.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/12/01/physical-base-rendering-3th-0/" data-id="cjp94b7dp0001gcuu73glnqta" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/physical-base-rendering-3th/">physical base rendering 3th</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ray-tracing-in-one-week-2" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/30/ray-tracing-in-one-week-2/" class="article-date">
-  <time datetime="2018-11-30T04:14:05.000Z" itemprop="datePublished">2018-11-30</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ray-tracing/">ray tracing</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/30/ray-tracing-in-one-week-2/">2 the vec3 class</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>写在前面：</b><br>19年的ggj要到了，来广州之前还信誓旦旦地说这次的ggj要用unreal！现在看来这个计划应该是要鸽了。可能会用回creator吧？可能当一个观众？God knows</p>
-<p><b>正文</b><br>《ray tracing in one weekend》的第二章，造了一个3D向量轮子：Vec3<br>向量的作用，顾名思义就是<b>表示方向的一个度量</b><br>打个比方，我们面前有一个盒子，为了描述盒子的体积，需要几个数字?<br>简单，三个数字，长(depth)，宽(width)，高(heigth)，就可以描述清楚了。<br><img src="/images/ray_tracing_in_one_weekend/chapter2_1.png" alt=""><br>很好，让我们换个表诉方式，如果盒子最内侧那个点是原点(0,0,0)<br>表述盒子最外侧那个点的<b>坐标</b>，是啥呢?<br>不出意外，应该就<b>等于盒子的长宽高(x=width,y=height,z=depth)</b><br><img src="/images/ray_tracing_in_one_weekend/chapter2_2.png" alt=""><br>继续，我们再换个表述方式，从最内侧的点(原点)指向最外侧的点的<b>方向</b>，如何去表达呢？<br>简单，将两个点的坐标相减就可以得到<b>向量v = (x=width,y=height,z=depth) - (x=0,y=0,z=0)</b>了<br><img src="/images/ray_tracing_in_one_weekend/chapter2_3.png" alt=""><br>在这里就会引入一个问题：<br>表达方向的向量和表达位置的坐标，用三个数字来表示的时候，<b>可能会是相同的表达式(比如上面的情况，任何坐标减去原点得到的向量，数值和坐标一样)</b>，一个无头无尾，没有上下文的三个数(x,y,z)，我们如何知道它表示的是向量，还是坐标呢?<br>通常我们会引入第四个数 w，用(x,y,z,w)来解决上面的问题<br>w = 0 表示这是一个向量，w = 1 表示这是一个坐标<br>对于(x,y,z,w)这种形式的四元组，我们称为齐次坐标。<br>怎么理解齐次坐标?<br>只要x,y,z 和 w 保持相同的倍数，都是同一个齐次坐标，<br>打个简单的比方: 我们称 (x,y,z,w) 和 (2 <em> x, 2 </em> y, 2 <em> z, 2 </em> w)是同一个东西<br>因为他们都可以通过除以最后一个数得到相同的表达式(x/w,y/w,z/w,1)<br>对于w = 0 表示一个向量，我们怎么去理解呢?<br>我们试试 (x/w, y/w, z/w, w/w)<br>当然 0 是不能除以 0 的<br>不过如果假设w是一个无限接近于0的正数<br>这时(x/w,y/w,z/w)就会变成一个非常大的数，那么这就像一条超长的射线，射向无限远，是不是就有种向量的感觉，指向某个地方<br>虽然听起来像科幻片，不过这段理解是在阅读《real time shadows》中，构建shadow volumns时看到的说法。或许有误。但也不是什么见不得光的想法。<br>当然 w = 0 和 w = 1，在仿射变换中，是一个开关translate矩阵作用的开关，设计得非常精妙，能解决问题当然也就足够了。这背后的想法很简单，坐标依赖于参考点，在移动的时候值会变化，而向量不论如何移动，值都是不变的。</p>
-<p>回到标题，第二章并没有构建Vec4，而是一个Vec3，向量的基本操作不外乎操作x,y,z属性，做加减乘除调制，求长度，求归一化，求点乘和叉乘。<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Vec3</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 构造</span></span><br><span class="line">    <span class="keyword">constructor</span>(x = 0, y = 0, z = 0) &#123;</span><br><span class="line">        <span class="keyword">this</span>.x = x</span><br><span class="line">        <span class="keyword">this</span>.y = y</span><br><span class="line">        <span class="keyword">this</span>.z = z</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 加</span></span><br><span class="line">    add(vec) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x + vec.x, <span class="keyword">this</span>.y + vec.y, <span class="keyword">this</span>.z + vec.z)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 减</span></span><br><span class="line">    sub(vec) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x - vec.x, <span class="keyword">this</span>.y - vec.y, <span class="keyword">this</span>.z - vec.z)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 乘</span></span><br><span class="line">    mul(num) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x * num, <span class="keyword">this</span>.y * num, <span class="keyword">this</span>.z * num)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 除</span></span><br><span class="line">    div(num) &#123;</span><br><span class="line">        <span class="keyword">let</span> inv = <span class="number">1</span> / num</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x * inv, <span class="keyword">this</span>.y * inv, <span class="keyword">this</span>.z * inv)</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 调制</span></span><br><span class="line">    mod(vec) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x * vec.x, <span class="keyword">this</span>.y * vec.y, <span class="keyword">this</span>.z * vec.z)</span><br><span class="line">    &#125;</span><br><span class="line">    addSelf(vec) &#123;</span><br><span class="line">        <span class="keyword">this</span>.x += vec.x,<span class="keyword">this</span>.y += vec.y,<span class="keyword">this</span>.z += vec.z</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    subSelf(vec) &#123;</span><br><span class="line">        <span class="keyword">this</span>.x -= vec.x,<span class="keyword">this</span>.y -= vec.y,<span class="keyword">this</span>.z -= vec.z</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    mulSelf(num) &#123;</span><br><span class="line">        <span class="keyword">this</span>.x *= num, <span class="keyword">this</span>.y *= num, <span class="keyword">this</span>.z *= num</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    divSelf(num) &#123;</span><br><span class="line">        <span class="keyword">let</span> inv = <span class="number">1</span> / num</span><br><span class="line">        <span class="keyword">this</span>.x *= inv, <span class="keyword">this</span>.y *= inv, <span class="keyword">this</span>.z *= inv</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    modSelf(vec) &#123;</span><br><span class="line">        <span class="keyword">this</span>.x *= vec.x, <span class="keyword">this</span>.y *= vec.y, ths.z *= vec.z</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 长度</span></span><br><span class="line">    length() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.x * <span class="keyword">this</span>.x + <span class="keyword">this</span>.y * <span class="keyword">this</span>.y + <span class="keyword">this</span>.z * <span class="keyword">this</span>.z)</span><br><span class="line">    &#125;</span><br><span class="line">    sqrLength() &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x * <span class="keyword">this</span>.x + <span class="keyword">this</span>.y * <span class="keyword">this</span>.y + <span class="keyword">this</span>.z * <span class="keyword">this</span>.z</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 归一化</span></span><br><span class="line">    normalize() &#123;</span><br><span class="line">        <span class="keyword">let</span> invLen = <span class="number">1</span>/<span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.x * <span class="keyword">this</span>.x + <span class="keyword">this</span>.y * <span class="keyword">this</span>.y + <span class="keyword">this</span>.z * <span class="keyword">this</span>.z)</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(<span class="keyword">this</span>.x * invLen, <span class="keyword">this</span>.y * invLen, <span class="keyword">this</span>.z * invLen)</span><br><span class="line">    &#125;</span><br><span class="line">    normalizeSelf() &#123;</span><br><span class="line">        <span class="keyword">let</span> invLen = <span class="number">1</span>/<span class="built_in">Math</span>.sqrt(<span class="keyword">this</span>.x * <span class="keyword">this</span>.x + <span class="keyword">this</span>.y * <span class="keyword">this</span>.y + <span class="keyword">this</span>.z * <span class="keyword">this</span>.z)</span><br><span class="line">        <span class="keyword">this</span>.x *= invLen, <span class="keyword">this</span>.y *= invLen, <span class="keyword">this</span>.z *= invLen</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 点乘</span></span><br><span class="line">    dot(vec) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">this</span>.x * vec.x + <span class="keyword">this</span>.y * vec.y + <span class="keyword">this</span>.z * vec.z</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//叉乘</span></span><br><span class="line">    cross(vec) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Vec3(</span><br><span class="line">            <span class="keyword">this</span>.y * vec.z - <span class="keyword">this</span>.z * vec.y,</span><br><span class="line">            <span class="keyword">this</span>.z * vec.x - <span class="keyword">this</span>.x * vec.z,</span><br><span class="line">            <span class="keyword">this</span>.x * vec.y - <span class="keyword">this</span>.y * vec.x,</span><br><span class="line">            )</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>最后对第一章的绘制做了点小修改，使用Vec3来存储每个像素的结果，当然最后的画面也和第一张是一样的<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;canvas width=<span class="string">"256"</span> height=<span class="string">"256"</span> id=<span class="string">"screen"</span>&gt;&lt;/canvas&gt;</span><br><span class="line">    &lt;!-- 引入向量模块 --&gt;</span><br><span class="line">    &lt;script src=<span class="string">"./vec.js"</span>&gt;&lt;/script&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params">canvas</span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">let</span> ctx = canvas.getContext(<span class="string">"2d"</span>)</span><br><span class="line">            <span class="keyword">let</span> w = canvas.attributes.width.value</span><br><span class="line">            <span class="keyword">let</span> h = canvas.attributes.height.value</span><br><span class="line">            ctx.fillStyle = <span class="string">"rgb(0,0,0)"</span></span><br><span class="line">            ctx.fillRect(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> imgdata = ctx.getImageData(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> pixels = imgdata.data</span><br><span class="line">            <span class="keyword">let</span> i = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> y = <span class="number">0</span>; y &lt; h; y++) &#123;</span><br><span class="line">                <span class="keyword">let</span> sy = <span class="number">1</span> - y / h</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">let</span> x = <span class="number">0</span>; x &lt; w; x++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">let</span> sx = x / w</span><br><span class="line">                    <span class="comment">// 使用向量存储每个向量的结果</span></span><br><span class="line">                    vec = <span class="keyword">new</span> Vec3(sx,sy,<span class="number">0.2</span>)</span><br><span class="line">                    pixels[i    ] = vec.x * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">1</span>] = vec.y * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">2</span>] = vec.z * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">3</span>] = <span class="number">1</span> * <span class="number">255</span></span><br><span class="line">                    i+=<span class="number">4</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            ctx.putImageData(imgdata, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> canvas = <span class="built_in">document</span>.getElementById(<span class="string">'screen'</span>)</span><br><span class="line">        render(canvas)</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>html&gt;</span><br></pre></td></tr></table></figure></p>
-<p><img src="/images/ray_tracing_in_one_weekend/chapter2_4.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/30/ray-tracing-in-one-week-2/" data-id="cjp94b7dv0006gcuu2omrutgr" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-    <article id="post-ray-tracing-in-one-week-1" class="article article-type-post" itemscope="" itemprop="blogPost">
-  <div class="article-meta">
-    <a href="/2018/11/29/ray-tracing-in-one-week-1/" class="article-date">
-  <time datetime="2018-11-29T13:33:36.000Z" itemprop="datePublished">2018-11-29</time>
-</a>
-    
-  <div class="article-category">
-    <a class="article-category-link" href="/categories/ray-tracing/">ray tracing</a>
-  </div>
-
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2018/11/29/ray-tracing-in-one-week-1/">1 output an image</a>
-    </h1>
-  
-
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p><b>写在前面：</b><br>之前一直在想，是不是可以使用简单的方式作为切入点学习渲染？然而在寻找答案这条路上走了很多弯路：<br>考虑过Ogre，然而不喜欢那些接口。<br>考虑过U3D，然而只考虑了一瞬间哈哈。<br>考虑过UE4，但是面对可视化材质编辑器和纷繁复杂，一日一变的usf，又感觉无从下手<br>考虑过Creator3D，然而看了一眼论坛的公测日志，我又犹豫了<br>考虑过shader toy，使用pixel shader，直觉告诉我这不是我想要的<br>考虑过DX12，可是复杂的资源管理让我感到在戴着枷锁跳舞</p>
-<p>在这之前看了不少书：《全局光照技术》，《Game Engine Architecture 3th》，《Real Time Rendering 4th》，都是很棒的书，看得似懂非懂，看的过程中不乏有时激动得很想实践一番，奈何不知道从哪里开始。</p>
-<p>昨晚辗转反侧之后，突然想到之前@MiloYip在知乎的回答：<a href="https://www.cnblogs.com/miloyip/archive/2010/03/29/1698953.html" target="_blank" rel="noopener">用JavaScript玩转计算机图形学(一)光线追踪入门</a><br>今天来尝试了一番之后，我相信这就是我想要的。@MiloYip在更新了两章用js玩光追的内容就鸽了，可能是发现了更有挑战的领域了吧。但是对我来说，一切从简是一个很好的开始。</p>
-<p><b>正文</b><br>从这里开始，就是《ray tracing in one weekend》的冒险之旅了。<br>所有的内容，都将使用javascript实践。</p>
-<p>光线追踪，简单的理解，我们不断的去跟踪进入眼球的光线，查看每条光线的辐照度，辐照度可以RGBA表示，至于RGBA到一个能看到的画面的映射，我们暂时不去深究，让我们立足于RGBA这一边界。<br>抽象来看，每条进入眼球的光线，相当于都带了一个RGBA值，这些光线在进入眼球的过程中，会先打向一个方形的平面(并将光线的RGBA值打在交点上(叠加)，于是平面上那个点就有了颜色)，这个平面就是我们最终看到的画面。<br><img src="/images/ray_tracing_in_one_weekend/chapter1_1.png" alt=""></p>
-<p>好了，问题来了，最基础的，我们如何去显示一个画面？<br>最简单的方式，一个方形的画面，我们可以用数组来存储这些信息(RGBA值)。通过修改这个数组的信息，理论上我们就相当于在修改画面的表现了。<br>刚刚好，canvas就有这样的接口。</p>
-<p><b>获取像素数组</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> ctx = canvas.getContext(<span class="string">'2d'</span>)</span><br><span class="line"><span class="keyword">let</span> width = canvas.attributes.width.value</span><br><span class="line"><span class="keyword">let</span> height = canvas.attributes.height.value</span><br><span class="line"><span class="keyword">let</span> imgdata = ctx.getImageData(<span class="number">0</span>,<span class="number">0</span>,width,height)</span><br><span class="line"><span class="keyword">let</span> pixels = imgdata.data <span class="comment">// 像素数组(一维)</span></span><br></pre></td></tr></table></figure></p>
-<p><b>使用像素数组绘制画面</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ctx.putImageData(imgdata, <span class="number">0</span>, <span class="number">0</span>)</span><br></pre></td></tr></table></figure></p>
-<p>这是一个很好的开始，剩下的就只要从<code>pixels</code>里面做文章了。</p>
-<p>回到标题，让我们<b>输出一个画面,将数组坐标绘制成颜色！</b><br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;html&gt;</span><br><span class="line">    &lt;canvas width=<span class="string">"256"</span> height=<span class="string">"256"</span> id=<span class="string">"screen"</span>&gt;&lt;/canvas&gt;</span><br><span class="line">    &lt;script&gt;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">render</span>(<span class="params">canvas</span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="comment">// 获取像素数组</span></span><br><span class="line">            <span class="keyword">let</span> ctx = canvas.getContext(<span class="string">"2d"</span>)</span><br><span class="line">            <span class="keyword">let</span> w = canvas.attributes.width.value</span><br><span class="line">            <span class="keyword">let</span> h = canvas.attributes.height.value</span><br><span class="line">            ctx.fillStyle = <span class="string">"rgb(0,0,0)"</span></span><br><span class="line">            ctx.fillRect(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> imgdata = ctx.getImageData(<span class="number">0</span>, <span class="number">0</span>, w, h)</span><br><span class="line">            <span class="keyword">let</span> pixels = imgdata.data</span><br><span class="line"></span><br><span class="line">            <span class="comment">//将数组坐标(通过除以数组长度映射到[0,1])当作颜色绘制</span></span><br><span class="line">            <span class="keyword">let</span> i = <span class="number">0</span></span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">let</span> y = <span class="number">0</span>; y &lt; h; y++) &#123;</span><br><span class="line">                <span class="keyword">let</span> sy = <span class="number">1</span> - y / h</span><br><span class="line">                <span class="keyword">for</span>(<span class="keyword">let</span> x = <span class="number">0</span>; x &lt; w; x++)</span><br><span class="line">                &#123;</span><br><span class="line">                    <span class="keyword">let</span> sx = x / w</span><br><span class="line">                    pixels[i    ] = sx * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">1</span>] = sy * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">2</span>] = <span class="number">0.2</span> * <span class="number">255</span></span><br><span class="line">                    pixels[i + <span class="number">3</span>] = <span class="number">1</span> * <span class="number">255</span></span><br><span class="line">                    i+=<span class="number">4</span></span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">// 使用像素数组绘制画面</span></span><br><span class="line">            ctx.putImageData(imgdata, <span class="number">0</span>, <span class="number">0</span>)</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">let</span> canvas = <span class="built_in">document</span>.getElementById(<span class="string">'screen'</span>)</span><br><span class="line">        render(canvas)</span><br><span class="line">    &lt;<span class="regexp">/script&gt;</span></span><br><span class="line"><span class="regexp">&lt;/</span>html&gt;</span><br></pre></td></tr></table></figure></p>
-<p>最终画面如下：<br><img src="/images/ray_tracing_in_one_weekend/chapter1_2.png" alt=""></p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://linhaiwei123.github.io/2018/11/29/ray-tracing-in-one-week-1/" data-id="cjp94b7dt0004gcuuy6ha5yhq" class="article-share-link">Share</a>
-      
-      
-  <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/ray-tracing-in-one-weekend/">ray tracing in one weekend</a></li></ul>
-
-    </footer>
-  </div>
-  
-</article>
-
-
-  
-
 
 </section>
         
